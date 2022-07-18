@@ -97,17 +97,17 @@ if [ $# != 2 ];then
 fi
 
 # Check the file size is at least 1024x1024 pixels
-info-l 'Checking source image size... '
+# info-l 'Checking source image size... '
 
-WIDTH=$(identify -format %w $SRC_FILE)
-HEIGHT=$(identify -format %h $SRC_FILE)
+# WIDTH=$(identify -format %w $SRC_FILE)
+# HEIGHT=$(identify -format %h $SRC_FILE)
 
-if [ $WIDTH -lt 1024 ] || [ $HEIGHT -lt 1024 ];then
-	echo "Width: ${WIDTH}px"
-	echo "Height: ${HEIGHT}px"
-  error 'The source file must be at least 1024x1024 pixels.'
-  exit -1
-fi
+# if [ $WIDTH -lt 1024 ] || [ $HEIGHT -lt 1024 ];then
+# 	echo "Width: ${WIDTH}px"
+# 	echo "Height: ${HEIGHT}px"
+#   error 'The source file must be at least 1024x1024 pixels.'
+#   exit -1
+# fi
 
 echo '[OK]'
 

@@ -162,11 +162,11 @@ async function prepareLogo() {
     })
   })
 
-  const generateIcons = new Promise((resolve, reject) => {
-    exec('bash .electron-vue/generate-icons.sh src/app-icon.png build', (error, stdout, stderr) => {
-      error ? reject(error) : resolve()
-    })
-  })
+  // const generateIcons = new Promise((resolve, reject) => {
+  //   exec('bash .electron-vue/generate-icons.sh src/app-icon.png build', (error, stdout, stderr) => {
+  //     error ? reject(error) : resolve()
+  //   })
+  // })
 
-  return createIconsDir.then(generateIcons)
+  return createIconsDir
 }
