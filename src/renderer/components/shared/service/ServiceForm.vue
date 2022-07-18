@@ -33,6 +33,7 @@
                              :options="resources.data"
                              :loading="resources.loading"
                              @focus="handleResourceNameFocus"
+                             @input="handleDeploymentSelected"
           />
         </template>
       </ControlGroup>
@@ -43,20 +44,6 @@
 
       <ControlGroup label="Ports Forwarding">
         <ForwardsTable v-model="attributes.forwards" :attribute="$v.attributes.forwards" />
-      </ControlGroup>
-
-      <ControlGroup label="">
-        <BaseCheckbox :value="attributes.localAddress != null"
-                      @input="toggleCustomLocalAddress"
-        >
-          Use custom local address
-        </BaseCheckbox>
-      </ControlGroup>
-
-      <ControlGroup v-if="attributes.localAddress != null" label="">
-        <BaseInput v-model="$v.attributes.localAddress.$model"
-                   placeholder="localhost"
-        />
       </ControlGroup>
     </fieldset>
 
@@ -79,7 +66,6 @@ import { CoreV1Api, AppsV1Api } from '@kubernetes/client-node' // eslint-disable
 import * as resourceKinds from '../../../lib/constants/workload-types'
 import * as clusterHelper from '../../../lib/helpers/cluster'
 
-import BaseCheckbox from '../form/BaseCheckbox'
 import BaseForm from '../form/BaseForm'
 import BaseInput from '../form/BaseInput'
 import BaseSelect from '../form/BaseSelect'
@@ -91,7 +77,6 @@ import AutocompleteInput from '../form/AutocompleteInput'
 export default {
   components: {
     AutocompleteInput,
-    BaseCheckbox,
     ControlGroup,
     BaseInput,
     BaseForm,
@@ -128,6 +113,7 @@ export default {
   data() {
     return {
       error: null,
+      deployments: [],
       attributes: {
         ...this.getEmptyAttributes(),
         clusterId: this.$route.params.clusterId,
@@ -184,11 +170,26 @@ export default {
       return {
         clusterId: null,
         name: '',
-        namespace: '',
+        namespace: null,
         workloadType: null,
         workloadName: '',
         forwards: [],
-        localAddress: null
+        localAddress: 'localhost'
+      }
+    },
+    handleDeploymentSelected(e) {
+      this.attributes.forwards = []
+      const selected = this.deployments.find(el => el.name === e)
+      if (selected) {
+        try {
+          const data = JSON.parse(selected.annotations['field.cattle.io/publicEndpoints'])
+          const port = data[data.length - 1].port
+          if (!this.attributes.forwards.some(el => el.localPort === port)) {
+            this.attributes.forwards.push({ id: '', localPort: port, remotePort: port })
+          }
+        } catch (err) {
+          console.log(err)
+        }
       }
     },
     async handleNamespaceFocus() {
@@ -230,8 +231,12 @@ export default {
         return response.body.items.map(x => x.metadata.name)
       } else if (kind === resourceKinds.DEPLOYMENT) {
         const appsApi = clusterHelper.buildApiClient(this.cluster, AppsV1Api)
+        this.deployments = []
         const response = await appsApi.listNamespacedDeployment(namespace)
-        return response.body.items.map(x => x.metadata.name)
+        return response.body.items.map(x => {
+          this.deployments.push(x.metadata)
+          return x.metadata.name
+        })
       } else if (kind === resourceKinds.SERVICE) {
         const response = await coreApi.listNamespacedService(namespace)
         return response.body.items.map(x => x.metadata.name)
