@@ -1,8 +1,8 @@
 import Vue from 'vue'
 
 // require Sentry as soon as possible
-import configureSentry from './configure-sentry'
-configureSentry({ Vue })
+// import configureSentry from './configure-sentry'
+// configureSentry({ Vue })
 
 /* eslint-disable import/first */
 import fixPath from './lib/fix-path'

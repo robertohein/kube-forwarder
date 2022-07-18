@@ -77,7 +77,6 @@ function startRenderer(options = {}) {
         }
       }
     )
-
     server.listen(port)
   })
 }

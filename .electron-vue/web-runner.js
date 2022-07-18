@@ -19,6 +19,7 @@ function startWeb() {
 }
 
 async function init() {
+  console.log(webConfig.entry.web)
   await startWeb()
   console.log('Web is started at 9081')
 }

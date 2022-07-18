@@ -1,8 +1,8 @@
 'use strict'
 
 // require Sentry as soon as possible
-import configureSentry from '../common/configure-sentry'
-configureSentry()
+// import configureSentry from '../common/configure-sentry'
+// configureSentry()
 
 /* eslint-disable import/first */
 import { app, BrowserWindow, Menu } from 'electron'
@@ -38,7 +38,10 @@ function createWindow() {
     resizable: process.env.NODE_ENV === 'development',
     webPreferences: {
       webSecurity: false,
-      nodeIntegration: true
+      nodeIntegration: true,
+      nodeIntegrationInWorker: true,
+      contextIsolation: false,
+      enableRemoteModule: true
     }
   })
 
