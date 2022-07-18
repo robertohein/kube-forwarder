@@ -9,7 +9,8 @@
         <AutocompleteInput v-model="$v.attributes.namespace.$model"
                            :options="namespaces.data"
                            :loading="namespaces.loading"
-                           @focus="handleNamespaceFocus" />
+                           @focus="handleNamespaceFocus"
+        />
       </ControlGroup>
 
       <ControlGroup label="Kind" size="2" :attribute="$v.attributes.workloadType">
@@ -31,7 +32,8 @@
                              v-bind="slotProps"
                              :options="resources.data"
                              :loading="resources.loading"
-                             @focus="handleResourceNameFocus" />
+                             @focus="handleResourceNameFocus"
+          />
         </template>
       </ControlGroup>
 
@@ -72,7 +74,7 @@ import cloneDeep from 'clone-deep'
 import { mapActions } from 'vuex'
 import { required, minLength, integer, between } from 'vuelidate/lib/validators'
 import { validationMixin } from 'vuelidate'
-import { CoreV1Api, ExtensionsV1beta1Api } from '@kubernetes/client-node' // eslint-disable-line camelcase
+import { CoreV1Api, AppsV1Api } from '@kubernetes/client-node' // eslint-disable-line camelcase
 
 import * as resourceKinds from '../../../lib/constants/workload-types'
 import * as clusterHelper from '../../../lib/helpers/cluster'
@@ -227,8 +229,8 @@ export default {
         const response = await coreApi.listNamespacedPod(namespace)
         return response.body.items.map(x => x.metadata.name)
       } else if (kind === resourceKinds.DEPLOYMENT) {
-        const extensionsApi = clusterHelper.buildApiClient(this.cluster, ExtensionsV1beta1Api)
-        const response = await extensionsApi.listNamespacedDeployment(namespace)
+        const appsApi = clusterHelper.buildApiClient(this.cluster, AppsV1Api)
+        const response = await appsApi.listNamespacedDeployment(namespace)
         return response.body.items.map(x => x.metadata.name)
       } else if (kind === resourceKinds.SERVICE) {
         const response = await coreApi.listNamespacedService(namespace)

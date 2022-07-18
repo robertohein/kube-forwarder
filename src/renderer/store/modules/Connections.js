@@ -198,7 +198,7 @@ async function loadPod(kubeConfig, namespace, podName) {
 }
 
 async function loadDeployment(kubeConfig, namespace, deploymentName) {
-  const coreApi = kubeConfig.makeApiClient(k8s.CoreV1Api)
+  const coreApi = kubeConfig.makeApiClient(k8s.AppsV1Api)
 
   try {
     return (await coreApi.readNamespacedDeployment(deploymentName, namespace)).body
@@ -316,7 +316,7 @@ function clearStates(commit, service) {
 }
 
 function validateThatRequiredPortsFree(state, service) {
-  const localAddress = service.localAddress || 'localhost';
+  const localAddress = service.localAddress || 'localhost'
   for (const forward of service.forwards) {
     if (state[[localAddress, forward.localPort].join(':')]) {
       throw buildSentryIgnoredError(`Port ${localAddress}:${forward.localPort} is busy.`)
