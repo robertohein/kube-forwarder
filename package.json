@@ -10,13 +10,13 @@
   "scripts": {
     "build": "npm run build:dist && npm run build:target",
     "build:dist": "node .electron-vue/build.js",
-    "build:target": "BUILD=$(cat build/.number) electron-builder",
+    "build:target": "cross-env BUILD=20220718-163908 electron-builder",
     "build:clean": "cross-env BUILD_TARGET=clean node .electron-vue/build.js",
     "build:web": "cross-env BUILD_TARGET=web node .electron-vue/build.js",
     "upload": "./upload.sh",
     "release": "RELEASE=true npm run build -- -- -p always --mac --linux --win",
-    "dev": "BUILD=DEV-VERSION node .electron-vue/dev-runner.js",
-    "web": "BUILD=WEB-VERSION node .electron-vue/web-runner.js",
+    "dev": "cross-env BUILD=DEV-VERSION node .electron-vue/dev-runner.js",
+    "web": "cross-env BUILD=WEB-VERSION node .electron-vue/web-runner.js",
     "e2e": "npm run pack && mocha test/e2e",
     "lint": "eslint --ext .js,.vue -f ./node_modules/eslint-friendly-formatter src test",
     "lint:fix": "eslint --ext .js,.vue -f ./node_modules/eslint-friendly-formatter --fix src test",
@@ -118,6 +118,7 @@
     "chai": "^4.1.2",
     "chalk": "^2.4.1",
     "copy-webpack-plugin": "^4.5.1",
+    "bootstrap-vue": "^2.0",
     "cross-env": "^5.1.6",
     "css-loader": "^2.1.1",
     "cypress": "^3.4.0",
@@ -160,6 +161,7 @@
     "spectron": "^3.8.0",
     "style-loader": "^0.21.0",
     "url-loader": "^1.0.1",
+    "vue-devtools": "^5.1.4",
     "vue-html-loader": "^1.2.4",
     "vue-loader": "^15.2.4",
     "vue-style-loader": "^4.1.0",
@@ -169,5 +171,9 @@
     "webpack-dev-server": "^3.4.1",
     "webpack-hot-middleware": "^2.25.0",
     "webpack-merge": "^4.2.1"
+  },
+  "optionalDependencies": {
+    "jquery": "1.9.1 - 3",
+    "popper.js": "^1.14.7"
   }
 }
